@@ -1,0 +1,62 @@
+1)create wallet
+2)remix etherum ide
+3)create a new file .sol extension-compile it
+4)go to etherum mainetwork(wallet)
+5)show all test network-enable
+6)add network
+7)add a network manually
+8)search - add mumbai matic to metamask
+9)copy info like name,address,chain etc
+10)network successfully-switch to mumbai
+11)search - mumbai matic faucet
+12)copy metamask acc address and paste in wallet address(acc to https://mumbaifaucet.com/)
+13)send me matic
+14)go to ide change environment to metamask
+15)deploy 
+16)transaction-view balance,deposit
+
+// SPDX-License-Identifier: Unlicensed
+pragma solidity ^0.8.18;
+
+
+contract MyBank
+{
+    mapping(address=> uint ) private _balances;
+    address public owner;
+    event LogDepositeMade(address accountHoder, uint amount );
+
+    constructor () 
+     {
+         owner=msg.sender;
+         emit LogDepositeMade(msg.sender, 1000);
+     }
+
+        function deposite() public payable  returns (uint)
+        {
+
+        require ((_balances[msg.sender] + msg.value) >  _balances[msg.sender] && msg.sender!=address(0));
+        _balances[msg.sender] += msg.value;
+        emit LogDepositeMade(msg.sender , msg.value);
+        return _balances[msg.sender];
+        } 
+
+        function withdraw (uint withdrawAmount) public  returns (uint)
+        {
+
+                require (_balances[msg.sender] >= withdrawAmount);
+                require(msg.sender!=address(0));
+                require (_balances[msg.sender] > 0);
+                _balances[msg.sender]-= withdrawAmount;
+                address payable recipient = payable(msg.sender);
+                recipient.transfer(withdrawAmount);
+                emit LogDepositeMade(msg.sender , withdrawAmount);
+                return _balances[msg.sender];
+
+        }
+
+        function viewBalance() public view returns (uint)
+        {
+            return _balances[msg.sender];
+        }
+   
+}
